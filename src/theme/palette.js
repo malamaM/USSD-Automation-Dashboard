@@ -17,7 +17,7 @@ const GREY = {
 };
 
 const PRIMARY = {
-  lighter: '#D1E9FC',
+  lighter: '#ad3838',
   light: '#76B0F1',
   main: '#2065D1',
   dark: '#103996',
@@ -62,7 +62,7 @@ const WARNING = {
 };
 
 const ERROR = {
-  lighter: '#FFE7D9',
+  lighter:'#8cb390',
   light: '#FFA48D',
   main: '#FF4842',
   dark: '#B72136',

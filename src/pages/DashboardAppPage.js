@@ -11,6 +11,10 @@ export default function DashboardAppPage() {
   const [AwaitingActionCount, setAwaitingActionCount] = useState(0);
   const [expiring, setexpiring] = useState(0);
   const [availableshortcodes, setavailableshortcodes] = useState(0);
+  const [activeCount, setActiveCount] = useState(0);
+  const [expiredCount, setexpiredCount] = useState(0);
+
+
 
 
   useEffect(() => {
@@ -54,8 +58,8 @@ export default function DashboardAppPage() {
     const fetchexpiring = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/count-expiring-shortcodes');
-        const { count } = response.data;
-        setexpiring(count);
+        const { expiringCount } = response.data;
+        setexpiring(expiringCount);
       } catch (error) {
         console.error('Error fetching expiring count:', error);
       }
@@ -88,6 +92,43 @@ export default function DashboardAppPage() {
     };
   }, []);
 
+
+  useEffect(() => {
+    const fetchActiveCount = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/count-expiring-shortcodes');
+        const { futureCount } = response.data;
+        setActiveCount(futureCount);
+      } catch (error) {
+        console.error('Error fetching active count:', error);
+      }
+    };
+  
+    fetchActiveCount();
+    const intervalId = setInterval(fetchActiveCount, 10000); // Fetch every 10 seconds
+  
+    return () => {
+      clearInterval(intervalId); // Cleanup the interval on component unmount
+    };
+  }, []);
+  useEffect(() => {
+    const fetchexpiredCount = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/count-expiring-shortcodes');
+        const { expiredCount } = response.data;
+        setexpiredCount(expiredCount);
+      } catch (error) {
+        console.error('Error fetching expired count:', error);
+      }
+    };
+  
+    fetchexpiredCount();
+    const intervalId = setInterval(fetchexpiredCount, 10000); // Fetch every 10 seconds
+  
+    return () => {
+      clearInterval(intervalId); // Cleanup the interval on component unmount
+    };
+  }, []);
   return (
     <>
       <Helmet>
@@ -165,13 +206,13 @@ export default function DashboardAppPage() {
             <AppCurrentVisits
               title="Current USSD codes"
               chartData={[
-                { label: 'Applied', value: 4344 },
-                { label: 'Active', value: 5435 },
-                { label: 'Expiring Soon', value: 1443 },
-                { label: 'Expired', value: 4443 },
+                { label: 'Applied', value: pendingApplicationsCount+AwaitingActionCount },
+                { label: 'Active', value: activeCount },
+                { label: 'Expiring Soon', value: expiring },
+                { label: 'Expired', value: expiredCount },
               ]}
               chartColors={[
-                theme.palette.primary.main,
+                theme.palette.success.main,
                 theme.palette.info.main,
                 theme.palette.warning.main,
                 theme.palette.error.main,
