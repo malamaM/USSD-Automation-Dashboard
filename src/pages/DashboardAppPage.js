@@ -9,6 +9,8 @@ export default function DashboardAppPage() {
   const theme = useTheme();
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
   const [AwaitingActionCount, setAwaitingActionCount] = useState(0);
+  const [expiring, setexpiring] = useState(0);
+  const [availableshortcodes, setavailableshortcodes] = useState(0);
 
 
   useEffect(() => {
@@ -48,6 +50,43 @@ export default function DashboardAppPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchexpiring = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/count-expiring-shortcodes');
+        const { count } = response.data;
+        setexpiring(count);
+      } catch (error) {
+        console.error('Error fetching expiring count:', error);
+      }
+    };
+
+    fetchexpiring();
+    const intervalId = setInterval(fetchexpiring, 10000); // Fetch every 10 seconds
+
+    return () => {
+      clearInterval(intervalId); // Cleanup the interval on component unmount
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchavailableshortcodes = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/shortcode/combinations');
+        const { count } = response.data;
+        setavailableshortcodes(count);
+      } catch (error) {
+        console.error('Error fetching available usdd count:', error);
+      }
+    };
+
+    fetchavailableshortcodes();
+    const intervalId = setInterval(fetchavailableshortcodes, 10000); // Fetch every 10 seconds
+
+    return () => {
+      clearInterval(intervalId); // Cleanup the interval on component unmount
+    };
+  }, []);
 
   return (
     <>
@@ -75,11 +114,11 @@ export default function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Expiring USSD's" total={23} color="warning" icon={'ant-design:windows-filled'} />
+            <AppWidgetSummary title="Expiring USSD's" total={expiring} color="warning" icon={'ant-design:windows-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Average Response Time" total={1} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary title="Total Available Shortcodes" total={availableshortcodes} color="error" icon={'ant-design:bug-filled'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
