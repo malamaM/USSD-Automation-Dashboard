@@ -9,7 +9,7 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
-
+import Login from './pages/Login';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -27,7 +27,7 @@ export default function Router() {
     },
     {
       path: 'login',
-      element: <LoginPage />,
+      element: <Login />,
     },
     {
       element: <SimpleLayout />,

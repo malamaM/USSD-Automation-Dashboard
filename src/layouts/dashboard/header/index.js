@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+
 import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -8,9 +10,9 @@ import { bgBlur } from '../../../utils/cssStyles';
 import Iconify from '../../../components/iconify';
 //
 import Searchbar from './Searchbar';
-import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
+import AccountPopover from './AccountPopover';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +45,18 @@ Header.propTypes = {
 };
 
 export default function Header({ onOpenNav }) {
+  const [showAccountPopover, setShowAccountPopover] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowAccountPopover(true);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -70,7 +84,7 @@ export default function Header({ onOpenNav }) {
         >
           <LanguagePopover />
           <NotificationsPopover />
-          <AccountPopover />
+          {showAccountPopover && <AccountPopover />}
         </Stack>
       </StyledToolbar>
     </StyledRoot>

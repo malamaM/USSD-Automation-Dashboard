@@ -1,32 +1,58 @@
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { faker } from '@faker-js/faker';
-// @mui
+import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
-// components
-import Iconify from '../components/iconify';
-// sections
-import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates,
-} from '../sections/@dashboard/app';
-
-// ----------------------------------------------------------------------
+import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../sections/@dashboard/app';
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+  const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
+  const [AwaitingActionCount, setAwaitingActionCount] = useState(0);
+
+
+  useEffect(() => {
+    const fetchPendingApplicationsCount = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/dashboard/pending-applications-count');
+        const { count } = response.data;
+        setPendingApplicationsCount(count);
+      } catch (error) {
+        console.error('Error fetching pending applications count:', error);
+      }
+    };
+
+    fetchPendingApplicationsCount();
+    const intervalId = setInterval(fetchPendingApplicationsCount, 10000); // Fetch every 10 seconds
+
+    return () => {
+      clearInterval(intervalId); // Cleanup the interval on component unmount
+    };
+  }, []);
+  useEffect(() => {
+    const fetchAwaitingActionCount = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/dashboard/awaiting-action-count');
+        const { count } = response.data;
+        setAwaitingActionCount(count);
+      } catch (error) {
+        console.error('Error fetching awaiting action count:', error);
+      }
+    };
+
+    fetchAwaitingActionCount();
+    const intervalId = setInterval(fetchAwaitingActionCount, 10000); // Fetch every 10 seconds
+
+    return () => {
+      clearInterval(intervalId); // Cleanup the interval on component unmount
+    };
+  }, []);
+
 
   return (
     <>
       <Helmet>
-        <title> ZICTA USSD ADMIN Dashboard </title>
+        <title>ZICTA USSD ADMIN Dashboard</title>
       </Helmet>
 
       <Container maxWidth="xl">
@@ -36,11 +62,16 @@ export default function DashboardAppPage() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Applications" total={7} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary title="New Applications" total={pendingApplicationsCount} icon={'ant-design:android-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Applications awating Action" total={4} color="info" icon={'ant-design:apple-filled'} />
+            <AppWidgetSummary
+              title="Applications awaiting Action"
+              total={AwaitingActionCount}
+              color="info"
+              icon={'ant-design:apple-filled'}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -53,7 +84,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
-              title="Website Acitivity"
+              title="Website Activity"
               subheader="(+43%) than last year"
               chartLabels={[
                 '01/01/2003',
@@ -108,11 +139,6 @@ export default function DashboardAppPage() {
               ]}
             />
           </Grid>
-
-         
-
-          
-          
         </Grid>
       </Container>
     </>
