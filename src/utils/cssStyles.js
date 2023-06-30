@@ -1,5 +1,6 @@
 // @mui
 import { alpha } from '@mui/material/styles';
+import 'tailwindcss/tailwind.css'; // Import the Tailwind CSS styles
 
 // ----------------------------------------------------------------------
 
