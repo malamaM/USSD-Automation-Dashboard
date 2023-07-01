@@ -23,6 +23,7 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  CircularProgress,
 } from '@mui/material';
 // components
 import Label from '../components/label';
@@ -84,30 +85,27 @@ export default function UserPage() {
   const [userList, setUserList] = useState([]);
   const [loading, setLoading] = useState(false);
 
-// ...
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://127.0.0.1:8000/api/applications');
+        const userData = response.data;
+        setUserList(userData);
+      } catch (error) {
+        console.error('User data fetch error:', error);
+        // Handle the error
+      } finally {
+        setLoading(false);
+      }
+    };
 
-useEffect(() => {
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get('http://127.0.0.1:8000/api/applications');
-      const userData = response.data;
-      setUserList(userData);
-    } catch (error) {
-      console.error('User data fetch error:', error);
-      // Handle the error
-    } finally {
-      setLoading(false);
-    }
-  };
+    const intervalId = setInterval(fetchUsers, 10000); // Fetch data every 10 seconds
 
-  const intervalId = setInterval(fetchUsers, 10000); // Fetch data every 10 seconds
-
-  return () => {
-    clearInterval(intervalId); // Clean up the interval on component unmount
-  };
-}, []);
-
+    return () => {
+      clearInterval(intervalId); // Clean up the interval on component unmount
+    };
+  }, []);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -185,121 +183,112 @@ useEffect(() => {
       </Stack>
 
       <Card>
-        <Scrollbar>
-          <TableContainer sx={{ minWidth: 800 }}>
-            <Table>
-              <UserListHead
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={userList.length}
-                numSelected={selected.length}
-                onRequestSort={handleRequestSort}
-                onSelectAllClick={handleSelectAllClick}
-                onFilterName={handleFilterByName}
-              />
-              <TableBody>
-                {filteredUsers
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    const { id, customer_name, shortcode_applied, organization_name, opened, status } = row;
-                    const isItemSelected = selected.indexOf(customer_name) !== -1;
+        {loading ? ( // Show loading screen if data is being fetched
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={userList.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                  onFilterName={handleFilterByName}
+                />
+                <TableBody>
+                  {filteredUsers
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => {
+                      const { id, customer_name, shortcode_applied, organization_name, opened, status } = row;
+                      const isItemSelected = selected.indexOf(customer_name) !== -1;
 
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        shortcode_applied="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isItemSelected}
-                            onChange={(event) => handleClick(event, customer_name)}
-                          />
-                        </TableCell>
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={customer_name} src="/static/mock-images/avatars/avatar_1.jpg" />
-                            <Typography variant="subtitle2" noWrap>
-                              {customer_name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{organization_name}</TableCell>
-                        <TableCell align="left">{shortcode_applied}</TableCell>
-                        <TableCell align="left">
-  <Label
-    variant="ghost"
-    color={opened ? 'success' : 'error'}
-    sx={{ textTransform: 'capitalize' }}
-  >
-    {opened}
-  </Label>
-</TableCell>
-                        <TableCell align="left">
-                          <Label
-                            variant="ghost"
-                            color={(status === 'active' && 'success') || 'error'}
-                            sx={{ textTransform: 'capitalize' }}
-                          >
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
-                        <TableCell align="right">
-                          <IconButton
-                            aria-controls="user-menu"
-                            aria-haspopup="true"
-                            onClick={handleOpenMenu}
-                          >
-                            <Iconify icon="eva:more-vertical-fill" />
-                          </IconButton>
-                          <Popover
-                            open={Boolean(open)}
-                            anchorEl={open}
-                            onClose={handleCloseMenu}
-                            PaperProps={{
-                              sx: { width: 200, py: 1, px: 0 },
-                            }}
-                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                          >
-                            <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
-                            <MenuItem onClick={handleCloseMenu}>Email</MenuItem>
-                            <MenuItem onClick={handleCloseMenu}>Block</MenuItem>
-                          </Popover>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+                      return (
+                        <TableRow
+                          hover
+                          key={id}
+                          tabIndex={-1}
+                          shortcode_applied="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              checked={isItemSelected}
+                              onChange={(event) => handleClick(event, customer_name)}
+                            />
+                          </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                              <Avatar alt={customer_name} src="/static/mock-images/avatars/avatar_default.jpg" />
+                              <Typography variant="subtitle2" noWrap>
+                                {customer_name}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell>{organization_name}</TableCell>
+                          <TableCell>{sentenceCase(shortcode_applied)}</TableCell>
+                          <TableCell>{opened}</TableCell>
+                          <TableCell>
+                            <Label
+                              variant={status === 'verified' ? 'success' : 'warning'}
+                              color={(status === 'verified' && 'success') || 'warning'}
+                            >
+                              {sentenceCase(status)}
+                            </Label>
+                          </TableCell>
+                          <TableCell align="right">
+                            <IconButton onClick={handleOpenMenu}>
+                              <Iconify icon="mdi-light:dots-vertical" />
+                            </IconButton>
+                            <Popover
+                              open={Boolean(open)}
+                              anchorEl={open}
+                              onClose={handleCloseMenu}
+                              anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                              }}
+                              transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                              }}
+                            >
+                              <Stack direction="row" p={2} spacing={1}>
+                                <MenuItem>Edit</MenuItem>
+                                <MenuItem>Delete</MenuItem>
+                              </Stack>
+                            </Popover>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={userList.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={userList.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Scrollbar>
+        )}
       </Card>
-
-      {isUserNotFound && (
-        <Typography variant="h6" sx={{ mt: 3 }}>
-          No user found
-        </Typography>
-      )}
     </Container>
   );
 }

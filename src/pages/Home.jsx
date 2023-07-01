@@ -1,14 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import LoginBg from './login-bg.png';
-import Hero from './hero.png';
+import axios from 'axios';
 
 const Home = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(null);
 
   const handleLoginClick = () => {
     navigate('/login');
+  };
+
+  const onSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+    const formData = new FormData(event.target);
+    const search = formData.get('search');
+
+    setIsLoading(true);
+    console.log(search);
+    axios
+      .post(
+        'http://127.0.0.1:8000/search',
+        { query: search },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then((response) => {
+        const isAvailable = response.data.available;
+        setIsLoading(false);
+        setIsAvailable(isAvailable);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -67,30 +96,37 @@ const Home = () => {
             }}
             className="pt-2 relative mx-auto w-full max-w-2xl text-gray-600"
           >
-            <input
-              className="border-2 border-gray-300 bg-white w-full h-14 px-5 pr-16 rounded text-lg focus:outline-none"
-              type="search"
-              name="search"
-              placeholder="Search For USSD Code"
-            />
-            <button type="submit" className="absolute right-0 inset-y-0 mt-2 mr-5 text-gray-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-8 h-8"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
-            </button>
+            <form onSubmit={onSubmit}>
+              <input
+                className="border-2 border-gray-300 bg-white w-full h-14 px-5 pr-16 rounded text-lg focus:outline-none"
+                type="search"
+                name="search"
+                placeholder="Search For USSD Code"
+              />
+              <button type="submit" className="absolute right-0 inset-y-0 mt-2 mr-5 text-gray-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-8 h-8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+              </button>
+            </form>
           </motion.div>
         </div>
+      </div>
+      <div className="mt-6">
+        {isLoading && <p>Loading...</p>}
+        {isAvailable === true && <p className="text-green-500">Available</p>}
+        {isAvailable === false && <p className="text-red-500">Not Available</p>}
       </div>
     </main>
   );

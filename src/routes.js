@@ -12,6 +12,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import Login from './pages/Login';
 import Loginn from './pages/Loginn';
 import Home from './pages/Home';
+import Search from './pages/Search';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -35,6 +36,7 @@ export default function Router() {
       path: 'home',
       element: <Home />,
     },
+    {path: 'search', element: <Search />},
     {
       element: <SimpleLayout />,
       children: [
