@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import Loginn from './pages/Loginn';
 import Home from './pages/Home';
 import Search from './pages/Search';
+import ApplicationForm from './pages/ApplicationForm';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -37,6 +38,7 @@ export default function Router() {
       element: <Home />,
     },
     {path: 'search', element: <Search />},
+    { path: 'apply', element: <ApplicationForm /> },
     {
       element: <SimpleLayout />,
       children: [
@@ -50,6 +52,7 @@ export default function Router() {
       element: <Navigate to="/404" replace />,
     },
   ]);
+
 
   return routes;
 }

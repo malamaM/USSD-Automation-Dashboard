@@ -86,6 +86,12 @@ export default function LoginForm() {
           label="Customer Email address"
           placeholder="Customer Email address"
         />
+             <TextField
+          name="shortcode_applied"
+          InputLabelProps={{ shrink: true }}
+          label="Shortcode Applied"
+          placeholder="Shortcode"
+        />
         <TextField
           name="password"
           InputLabelProps={{ shrink: true }}

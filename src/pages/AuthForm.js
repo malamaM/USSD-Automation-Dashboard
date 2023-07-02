@@ -1,11 +1,20 @@
 import React, { useCallback, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import Input from './Input';
 import Button from './Button';
 
+
+
+
+
+
 const AuthForm = () => {
+
+  const Navigate = useNavigate();
+
   const [variant, setVariant] = useState('LOGIN');
   const [loading, setLoading] = useState(false);
   // const [csrfToken, setCsrfToken] = useState('');
@@ -57,6 +66,9 @@ const AuthForm = () => {
           localStorage.setItem('token', token);
 
           // Redirect or perform any necessary actions
+        
+            Navigate('/dashboard'); // Replace '/dashboard' with the appropriate route for your dashboard page
+          
         }, 3000);
       } else {
         // Authentication failed
