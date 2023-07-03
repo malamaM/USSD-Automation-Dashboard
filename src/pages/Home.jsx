@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const Home = () => {
 
   return (
     <main className="h-screen w-full bg-hero-pattern-blue bg-cover flex justify-center items-center relative">
-      <div className="content-hero h-[100px] w-[100px] absolute top-5 left-20" />
+     <Link to='/dashboard/app'> <div className="content-hero h-[100px] w-[100px] absolute top-5 left-20" />
       <div className="absolute top-10 right-20">
         <button
           onClick={handleLoginClick}
@@ -122,7 +123,7 @@ const Home = () => {
             </form>
           </motion.div>
         </div>
-      </div>
+      </div></Link>
       <div className="mt-6">
         {isLoading && <p>Loading...</p>}
         {isAvailable === true && <p className="text-green-500">Available</p>}
