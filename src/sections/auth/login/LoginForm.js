@@ -92,31 +92,21 @@ export default function LoginForm() {
           label="Shortcode Applied"
           placeholder="Shortcode"
         />
-        <TextField
-          name="password"
-          InputLabelProps={{ shrink: true }}
-          label="Password"
-          placeholder="Password"
-        />
-        <TextField
-          name="confirm_password"
-          InputLabelProps={{ shrink: true }}
-          label="Confirm Password"
-          placeholder="Confirm Password"
-        />
+     
       </Stack>
 
       {error && <div>{error}</div>}
-
       <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={loading}
-      >
-        APPLY
-      </LoadingButton>
+  fullWidth
+  size="large"
+  type="submit"
+  variant="contained"
+  loading={loading}
+  style={{ color: 'black' }}
+>
+  APPLY
+</LoadingButton>
+
     </form>
   );
 }

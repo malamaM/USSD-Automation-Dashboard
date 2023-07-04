@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
-
 const Home = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +13,7 @@ const Home = () => {
   };
 
   const onSubmit = (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
     const formData = new FormData(event.target);
     const search = formData.get('search');
 
@@ -43,7 +42,7 @@ const Home = () => {
 
   return (
     <main className="h-screen w-full bg-hero-pattern-blue bg-cover flex justify-center items-center relative">
-     <Link to='/dashboard/app'> <div className="content-hero h-[100px] w-[100px] absolute top-5 left-20" />
+      <div className="content-hero h-[100px] w-[100px] absolute top-5 left-20" />
       <div className="absolute top-10 right-20">
         <button
           onClick={handleLoginClick}
@@ -123,11 +122,19 @@ const Home = () => {
             </form>
           </motion.div>
         </div>
-      </div></Link>
-      <div className="mt-6">
-        {isLoading && <p>Loading...</p>}
-        {isAvailable === true && <p className="text-green-500">Available</p>}
-        {isAvailable === false && <p className="text-red-500">Not Available</p>}
+      </div>
+      <div className="mt-6 rounded-full bg-white p-4" style={{ marginTop: '400px', position:'absolute' }}>
+        {isLoading && (
+          <div className="flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-blue-500 animate-spin" />
+          </div>
+        )}
+        {isAvailable === true && (
+          <p className="text-green-500">Available</p>
+        )}
+        {isAvailable === false && (
+          <p className="text-red-500">Not Available</p>
+        )}
       </div>
     </main>
   );
