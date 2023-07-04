@@ -5,8 +5,6 @@ import { Radio, RadioGroup } from '@mui/material';
 //
 import Icon from './Icon';
 
-// ----------------------------------------------------------------------
-
 const ColorSinglePicker = forwardRef(({ colors, ...other }, ref) => (
   <RadioGroup row ref={ref} {...other}>
     {colors.map((color) => {
