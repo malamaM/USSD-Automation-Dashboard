@@ -17,7 +17,7 @@ import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../section
 
 
 const columns = [
-  { id: 'appId', label: 'App ID', minWidth: 100 },
+  { id: 'appId', label: 'Application ID', minWidth: 100 },
   { id: 'custName', label: 'Customer Name', minWidth: 170 },
   { id: 'shortCode', label: 'Short Code', minWidth: 100 },
   { id: 'expiryDate', label: 'Expiry Date', minWidth: 120 },
@@ -224,7 +224,7 @@ export default function DashboardAppPage() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Applications" total={pendingApplicationsCount} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary title="New Applications" total={pendingApplicationsCount} color="primary" icon={'ant-design:notification-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -232,16 +232,16 @@ export default function DashboardAppPage() {
               title="Applications awaiting Action"
               total={AwaitingActionCount}
               color="info"
-              icon={'ant-design:apple-filled'}
+              icon={'ant-design:message-filled'}
             />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Expiring USSD's" total={expiring} color="warning" icon={'ant-design:windows-filled'} />
+            <AppWidgetSummary title="Expiring USSD's" total={expiring} color="warning" icon={'ant-design:warning-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Total Available Shortcodes" total={availableshortcodes} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary title="Total Available Shortcodes" total={availableshortcodes} color="error" icon={'ant-design:hourglass-filled'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>

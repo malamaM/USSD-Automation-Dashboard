@@ -83,7 +83,7 @@ const palette = {
   text: {
     primary: '#ffffff',
     secondary: '#ffffff',
-    disabled: '#000000',
+    disabled: '#ffffff',
   },
   background: {
     paper: '#2d3d7d',
