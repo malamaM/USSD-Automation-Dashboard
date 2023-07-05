@@ -302,7 +302,7 @@ export default function DashboardAppPage() {
             />
           </Grid>
 <Grid item xs={12} md={6} lg={13}>
-<Typography variant="h6" sx={{ mb: 5 }}>
+<Typography variant="h6" sx={{ mb: 5, color:'black' }}>
           USSD Shortcode Licenses
         </Typography>
 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
