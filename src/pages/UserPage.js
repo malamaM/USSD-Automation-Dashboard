@@ -1,8 +1,11 @@
 import { Helmet } from 'react-helmet-async';
+import { useNavigate, BrowserRouter } from 'react-router-dom';
+
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+
 
 // @mui
 import {
@@ -49,6 +52,12 @@ const createData = (appId, custName, shortCode, expiryDate, licenseStatus) => {
   return { appId, custName, shortCode, expiryDate, licenseStatus };
 };
 
+
+const HandleButtonClick = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
+  navigate('/apply'); // Use the navigate function to redirect
+};
+
 export default function UserPage() {
   const theme = useTheme();
   const [rows, setRows] = useState([]);
@@ -59,6 +68,11 @@ export default function UserPage() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+ 
+
+  
+
   
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -124,9 +138,14 @@ export default function UserPage() {
         <Typography variant="h4" sx={{ mb: 2, color: 'black' }}>
           Applications
         </Typography>
-        <Button variant="contained" sx={{ color: 'black' }}>
-          Add New Application
-        </Button>
+        <Button variant="contained" onClick={HandleButtonClick} sx={{
+  color: 'black',
+  '&:hover': {
+    color: 'white',
+  },
+}}>
+  Add New Application
+</Button>
       </Stack>
 
       
