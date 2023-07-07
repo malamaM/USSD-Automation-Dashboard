@@ -22,12 +22,12 @@ const navConfig = [
   },
   {
     title: 'New Application',
-    path: '/apply',
+    path: '/apply2',
     icon: icon('plus-solid'),
   },
   {
     title: 'Place Holder',
-    path: '/dashboard/blog',
+    path: '/',
     icon: icon('ic_blog'),
   },
   {

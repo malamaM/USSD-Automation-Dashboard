@@ -69,8 +69,7 @@ export default function LoginPage() {
 
         
 
-            <Divider sx={{ my: 3 }}>
-            </Divider>
+         
 
             <LoginForm />
           </StyledContent>

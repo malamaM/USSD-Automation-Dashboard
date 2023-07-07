@@ -60,7 +60,7 @@ export default function LoginForm() {
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit}>
+    <form ref={formRef} onSubmit={handleSubmit} style={{margintop:'100px', width:'50%'}}>
       <Stack spacing={3}>
         <TextField
           name="organization"
@@ -102,7 +102,9 @@ export default function LoginForm() {
   type="submit"
   variant="contained"
   loading={loading}
-  style={{ color: 'black' }}
+  style={{ color: 'white' }}
+  
+
 >
   APPLY
 </LoadingButton>
