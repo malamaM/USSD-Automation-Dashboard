@@ -20,6 +20,7 @@ import Apply from './pages/Apply';
 export default function Router() {
   const routes = useRoutes([
     {
+      
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
@@ -28,7 +29,12 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
+
       ],
+    },
+    {
+      path: '/',
+      element: <Home />,
     },
     {
       path: 'login',
