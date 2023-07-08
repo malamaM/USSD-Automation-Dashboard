@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,8 +9,25 @@ const Apply = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAvailable, setIsAvailable] = useState(null);
 
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const token = localStorage.getItem('token');
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/me');
+        // User is authenticated, continue with the page load
+      } catch (error) {
+        console.error('User not authenticated:', error);
+        navigate('/login');
+      }
+    };
+    
+    checkAuthentication();
+  }, []);
+
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate('/Dashboard/app');
   };
 
   const onSubmit = (event) => {
@@ -49,7 +66,7 @@ const Apply = () => {
           onClick={handleLoginClick}
           className="text-sm font-semibold leading-6 text-white cursor-pointer focus:outline-none"
         >
-          Log in <span aria-hidden="true">&rarr;</span>
+          Back to Dashboard <span aria-hidden="true">&rarr;</span>
         </button>
       </div>
       <div className="w-5/6 flex-col flex items-center justify-center ">

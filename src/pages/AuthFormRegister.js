@@ -11,15 +11,15 @@ import Button from './Button';
 
 
 
-const AuthForm = () => {
+const AuthFormRegister = () => {
 
   const Navigate = useNavigate();
-  
+
   const handleLoginClick = () => {
-    Navigate('/signup');
+    Navigate('/login');
   };
 
-  const [variant, setVariant] = useState('LOGIN');
+  const [variant, setVariant] = useState('REGISTER');
   const [loading, setLoading] = useState(false);
   // const [csrfToken, setCsrfToken] = useState('');
 
@@ -56,13 +56,13 @@ const AuthForm = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login', data);
+      const response = await axios.post('http://127.0.0.1:8000/api/register', data);
 
       if (response.status === 200) {
         // Authentication successful
         const { token } = response.data.authorisation; // Extract the JWT token from the response
 
-        toast.success('Login successful');
+        toast.success('Register successful');
         setTimeout(() => {
           setLoading(false);
 
@@ -206,8 +206,6 @@ const AuthForm = () => {
       handleLoginClick();
     }
   }}
-
-         
             className="underlin cursor-pointer text-sky-500 hover:text-sky-600"
           >
             {variant === 'LOGIN' ? 'Create an account' : 'Sign in'}
@@ -218,4 +216,4 @@ const AuthForm = () => {
   );
 };
 
-export default AuthForm;
+export default AuthFormRegister;

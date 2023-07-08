@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
@@ -30,8 +33,22 @@ export default function AccountPopover() {
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
-
-  const handleClose = () => {
+  const token = localStorage.getItem('token');
+  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  const navigate = useNavigate();
+  const handleClose = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/logout');
+      if (response.status === 200) {
+        // Logout successful
+        // Perform any necessary actions after logout
+        console.log('Logged out successfully');
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Handle error if the logout request fails
+    }
     setOpen(null);
   };
 

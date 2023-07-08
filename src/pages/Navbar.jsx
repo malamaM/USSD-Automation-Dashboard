@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, N } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Dialog } from '@headlessui/react';
 import axios from 'axios';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -15,6 +16,10 @@ const navigation = [
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const Navigate = useNavigate();
+
+
+
 
   useEffect(() => {
     fetchUserData();

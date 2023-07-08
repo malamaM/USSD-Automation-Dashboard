@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
@@ -42,6 +44,25 @@ export default function DashboardAppPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const Navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const token = localStorage.getItem('token');
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/me');
+        // User is authenticated, continue with the page load
+      } catch (error) {
+        console.error('User not authenticated:', error);
+        Navigate('/login');
+      }
+    };
+    
+    checkAuthentication();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

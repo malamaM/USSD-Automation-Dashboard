@@ -15,6 +15,7 @@ import Home from './pages/Home';
 import Search from './pages/Search';
 import ApplicationForm from './pages/ApplicationForm';
 import Apply from './pages/Apply';
+import SignUp from './pages/SignUpPage';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -47,6 +48,7 @@ export default function Router() {
     {path: 'search', element: <Search />},
     { path: 'apply', element: <ApplicationForm /> },
     { path: 'apply2', element: <Apply /> },
+    { path: 'signup', element: <SignUp /> },
 
     {
       element: <SimpleLayout />,
