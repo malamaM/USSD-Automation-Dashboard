@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
@@ -15,8 +14,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../sections/@dashboard/app';
-
-
+import UpdateFormPopup from './UpdateFormPopup';
 
 const columns = [
   { id: 'appId', label: 'Application ID', minWidth: 100 },
@@ -46,23 +44,21 @@ export default function DashboardAppPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const Navigate = useNavigate();
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      const token = localStorage.getItem('token');
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  const handleRowClick = (row) => {
+    setSelectedRow(row);
+    openPopup();
+  };
 
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/me');
-        // User is authenticated, continue with the page load
-      } catch (error) {
-        console.error('User not authenticated:', error);
-        Navigate('/login');
-      }
-    };
-    
-    checkAuthentication();
-  }, []);
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -89,6 +85,23 @@ export default function DashboardAppPage() {
     setPage(0);
   };
  
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const token = localStorage.getItem('token');
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/me');
+        // User is authenticated, continue with the page load
+      } catch (error) {
+        console.error('User not authenticated:', error);
+        Navigate('/login');
+      }
+    };
+    
+    checkAuthentication();
+  }, []);
+
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -119,7 +132,6 @@ export default function DashboardAppPage() {
     };
   }, []);
 
-
   useEffect(() => {
     const fetchPendingApplicationsCount = async () => {
       try {
@@ -138,6 +150,7 @@ export default function DashboardAppPage() {
       clearInterval(intervalId); // Cleanup the interval on component unmount
     };
   }, []);
+
   useEffect(() => {
     const fetchAwaitingActionCount = async () => {
       try {
@@ -183,7 +196,7 @@ export default function DashboardAppPage() {
         const { count } = response.data;
         setavailableshortcodes(count);
       } catch (error) {
-        console.error('Error fetching available usdd count:', error);
+        console.error('Error fetching availableusdd count:', error);
       }
     };
 
@@ -194,7 +207,6 @@ export default function DashboardAppPage() {
       clearInterval(intervalId); // Cleanup the interval on component unmount
     };
   }, []);
-
 
   useEffect(() => {
     const fetchActiveCount = async () => {
@@ -214,6 +226,7 @@ export default function DashboardAppPage() {
       clearInterval(intervalId); // Cleanup the interval on component unmount
     };
   }, []);
+
   useEffect(() => {
     const fetchexpiredCount = async () => {
       try {
@@ -232,6 +245,7 @@ export default function DashboardAppPage() {
       clearInterval(intervalId); // Cleanup the interval on component unmount
     };
   }, []);
+
   return (
     <>
       <Helmet>
@@ -303,13 +317,12 @@ export default function DashboardAppPage() {
                 },
               ]}
             />
-          
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
               title="Current USSD codes"
               chartData={[
-                { label: 'Applied', value: pendingApplicationsCount+AwaitingActionCount },
+                { label: 'Applied', value: pendingApplicationsCount + AwaitingActionCount },
                 { label: 'Active', value: activeCount },
                 { label: 'Expiring Soon', value: expiring },
                 { label: 'Expired', value: expiredCount },
@@ -322,65 +335,67 @@ export default function DashboardAppPage() {
               ]}
             />
           </Grid>
-<Grid item xs={12} md={6} lg={13}>
-<Typography variant="h6" sx={{ mb: 5, color:'black' }}>
-          USSD Shortcode Licenses
-        </Typography>
-<Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TextField
-        label="Search"
-        value={searchQuery}
-        onChange={handleSearch}
-        margin="normal"
-        variant="outlined"
-        fullWidth
-      />
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align="left"
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(searchQuery ? filteredRows : rows)
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.appId}>
-                    <TableCell>{row.appId}</TableCell>
-                    <TableCell>{row.custName}</TableCell>
-                    <TableCell>{row.shortCode}</TableCell>
-                    <TableCell>{row.expiryDate}</TableCell>
-                    <TableCell>{row.licenseStatus}</TableCell>
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={(searchQuery ? filteredRows : rows).length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
-    </Grid>
-          
+          <Grid item xs={12} md={6} lg={13}>
+            <Typography variant="h6" sx={{ mb: 5, color: 'black' }}>
+              USSD Shortcode Licenses
+            </Typography>
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+              <TextField
+                label="Search"
+                value={searchQuery}
+                onChange={handleSearch}
+                margin="normal"
+                variant="outlined"
+                fullWidth
+              />
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      {columns.map((column) => (
+                        <TableCell
+                          key={column.id}
+                          align="left"
+                          style={{ minWidth: column.minWidth }}
+                        >
+                          {column.label}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {(searchQuery ? filteredRows : rows)
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => {
+                        return (
+                          <TableRow hover role="checkbox" tabIndex={-1} key={row.appId} onClick={() => handleRowClick(row)}>
+                            <TableCell>{row.appId}</TableCell>
+                            <TableCell>{row.custName}</TableCell>
+                            <TableCell>{row.shortCode}</TableCell>
+                            <TableCell>{row.expiryDate}</TableCell>
+                            <TableCell>{row.licenseStatus}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={(searchQuery ? filteredRows : rows).length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Paper>
+          </Grid>
         </Grid>
       </Container>
+      {isPopupOpen && (
+        <UpdateFormPopup selectedRow={selectedRow} closePopup={closePopup} />
+      )}
     </>
   );
 }
