@@ -13,6 +13,9 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
 import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../sections/@dashboard/app';
 import UpdateFormPopup from './UpdateFormPopup';
 
@@ -22,12 +25,12 @@ const columns = [
   { id: 'shortCode', label: 'Short Code', minWidth: 100 },
   { id: 'expiryDate', label: 'Expiry Date', minWidth: 120 },
   { id: 'licenseStatus', label: 'License Status', minWidth: 120 },
+  { id: 'actions', label: 'Actions', minWidth: 120 },
 ];
 
-const createData = (appId, custName, shortCode, expiryDate, licenseStatus) => {
-  return { appId, custName, shortCode, expiryDate, licenseStatus };
+const createData = (appId, custName, shortCode, expiryDate, licenseStatus, actions) => {
+  return { appId, custName, shortCode, expiryDate, licenseStatus, actions };
 };
-
 export default function DashboardAppPage() {
   const theme = useTheme();
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
@@ -364,20 +367,26 @@ export default function DashboardAppPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {(searchQuery ? filteredRows : rows)
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => {
-                        return (
-                          <TableRow hover role="checkbox" tabIndex={-1} key={row.appId} onClick={() => handleRowClick(row)}>
-                            <TableCell>{row.appId}</TableCell>
-                            <TableCell>{row.custName}</TableCell>
-                            <TableCell>{row.shortCode}</TableCell>
-                            <TableCell>{row.expiryDate}</TableCell>
-                            <TableCell>{row.licenseStatus}</TableCell>
-                          </TableRow>
-                        );
-                      })}
-                  </TableBody>
+  {(searchQuery ? filteredRows : rows)
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    .map((row) => {
+      return (
+        <TableRow hover role="checkbox" tabIndex={-1} key={row.appId} onClick={() => handleRowClick(row)}>
+          <TableCell>{row.appId}</TableCell>
+          <TableCell>{row.custName}</TableCell>
+          <TableCell>{row.shortCode}</TableCell>
+          <TableCell>{row.expiryDate}</TableCell>
+          <TableCell>{row.licenseStatus}</TableCell>
+          <TableCell>
+            <DeleteIcon />
+            <EditIcon />
+            <CheckIcon />
+          </TableCell>
+        </TableRow>
+      );
+    })}
+</TableBody>
+
                 </Table>
               </TableContainer>
               <TablePagination
