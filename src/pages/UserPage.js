@@ -38,6 +38,8 @@ import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 import { UserListHead } from '../sections/@dashboard/user';
+import UpdateFormPopup from './UpdateFormPopup';
+
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +69,8 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedRow, setSelectedRow] = useState(null);
   const [open, setOpen] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -124,12 +128,17 @@ export default function UserPage() {
   }, []);
 
   const handleRowClick = (row) => {
-    setSelectedRow(row);
-    setOpen(true);
+    handleOpenUpdateForm(row);
+  };
+
+  const handleOpenUpdateForm = (row) => {
+    setSelectedRowData(row);
+    setShowUpdateForm(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setShowUpdateForm(false);
   };
 
   return (
@@ -179,6 +188,7 @@ export default function UserPage() {
                       key={row.appId}
                       onClick={() => handleRowClick(row)}
                     >
+
                       <TableCell>{row.appId}</TableCell>
                       <TableCell>{row.custName}</TableCell>
                       <TableCell>{row.shortCode}</TableCell>
@@ -216,6 +226,11 @@ export default function UserPage() {
           <Button onClick={handleClose}>Close</Button>
         </DialogContent>
       </Dialog>
+
+      {showUpdateForm && (
+        <UpdateFormPopup selectedRow={selectedRowData} closePopup={handleClose} buttonText="Approve"  handleChangeStatusEndpoint="api1"     dialogueTitle="Update Application Details"
+        />
+      )}
     </Container>
   );
 }

@@ -46,12 +46,15 @@ export default function DashboardAppPage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+
+const [action, setAction] = useState(null);
+
   const Navigate = useNavigate();
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRowData, setSelectedRowData] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleRowClick = (row) => {
-    setSelectedRow(row);
+    setSelectedRowData(row);
     openPopup();
   };
 
@@ -59,9 +62,7 @@ export default function DashboardAppPage() {
     setIsPopupOpen(true);
   };
 
-  const closePopup = () => {
-    setIsPopupOpen(false);
-  };
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -72,6 +73,11 @@ export default function DashboardAppPage() {
     setPage(0);
   };
   
+  const handleClose = () => {
+    setIsPopupOpen(false);
+  };
+  const [open, setOpen] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
@@ -402,9 +408,9 @@ export default function DashboardAppPage() {
           </Grid>
         </Grid>
       </Container>
-      {isPopupOpen && (
-        <UpdateFormPopup selectedRow={selectedRow} closePopup={closePopup} />
-      )}
+      {isPopupOpen && <UpdateFormPopup selectedRow={selectedRowData} closePopup={handleClose} buttonText="Renew License" handleChangeStatusEndpoint="api1"     dialogueTitle="Update License Details"
+ />}
+
     </>
   );
 }
