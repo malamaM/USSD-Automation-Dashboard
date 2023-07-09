@@ -410,7 +410,15 @@ const [action, setAction] = useState(null);
       </Container>
       {isPopupOpen && <UpdateFormPopup selectedRow={selectedRowData} closePopup={handleClose} buttonText="Renew License" handleChangeStatusEndpoint="api1"     dialogueTitle="Update License Details"
  />}
-
+<div>
+      {/* Other content */}
+      <iframe src="http://127.0.0.1:8000/lstripe/" width="100%" height="500px" frameBorder="0" title="Payment Form" />
+    </div>
     </>
+    
+
+
+
+
   );
 }
