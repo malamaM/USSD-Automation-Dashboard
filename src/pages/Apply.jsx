@@ -8,7 +8,7 @@ const Apply = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isAvailable, setIsAvailable] = useState(null);
-
+/*
   useEffect(() => {
     const checkAuthentication = async () => {
       const token = localStorage.getItem('token');
@@ -24,7 +24,7 @@ const Apply = () => {
     };
     
     checkAuthentication();
-  }, []);
+  }, []); */
 
   const handleLoginClick = () => {
     navigate('/Dashboard/app');
