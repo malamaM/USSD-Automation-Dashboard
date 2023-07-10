@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 
-const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStatusEndpoint, dialogueTitle }) => {
+const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStatusEndpoint, dialogueTitle }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [formData, setFormData] = useState({
     id : selectedRow.id,
     appId: selectedRow.appId,
     custName: selectedRow.custName,
     shortCode: selectedRow.shortCode,
-    expiryDate: selectedRow.expiryDate,
-    licenseStatus: selectedRow.licenseStatus,
+    organizationName: selectedRow.organizationName,
+    status: selectedRow.status,
   });
 
   const handleClose = () => {
@@ -24,7 +24,7 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/licenses/update', formData);
+      const response = await axios.post('http://127.0.0.1:8000/api/applications/update', formData);
       console.log('Form submitted successfully', response.data);
       // Optionally, you can show a success message or perform any other actions here
     } catch (error) {
@@ -61,7 +61,7 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
         const response = await axios.post('http://127.0.0.1:8000/api/change-status', formData);
         console.log('API 1 response:', response.data);
       } else if (handleChangeStatusEndpoint === 'api2') {
-        const response = await axios.post('http://127.0.0.1:8000/api/shortcode/setexpiry', formData);
+        const response = await axios.post('http://127.0.0.1:8000/api/endpoint2', formData);
         console.log('API 2 response:', response.data);
       }
     } catch (error) {
@@ -90,6 +90,12 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
             fullWidth
           />
           <TextField
+            label="Organization"
+            name="organizationName"
+            value={formData.organizationName}
+            onChange={handleInputChange}
+            fullWidth
+          /><TextField
             label="Short Code"
             name="shortCode"
             value={formData.shortCode}
@@ -97,16 +103,9 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
             fullWidth
           />
           <TextField
-            label="Expiry Date"
-            name="expiryDate"
-            value={formData.expiryDate}
-            onChange={handleInputChange}
-            fullWidth
-          />
-          <TextField
-            label="License Status"
-            name="licenseStatus"
-            value={formData.licenseStatus}
+            label="Status"
+            name="status"
+            value={formData.status}
             onChange={handleInputChange}
             fullWidth
           />
@@ -129,7 +128,7 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
   );
 };
 
-UpdateFormPopup.propTypes = {
+UpdateApplicationFormPopup.propTypes = {
   selectedRow: PropTypes.object.isRequired,
   closePopup: PropTypes.func.isRequired,
   buttonText: PropTypes.string.isRequired,
@@ -137,4 +136,4 @@ UpdateFormPopup.propTypes = {
   dialogueTitle: PropTypes.string.isRequired,
 };
 
-export default UpdateFormPopup;
+export default UpdateApplicationFormPopup;

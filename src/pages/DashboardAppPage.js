@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, Tab } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,6 +20,7 @@ import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../section
 import UpdateFormPopup from './UpdateFormPopup';
 
 const columns = [
+  { id: 'id', label: 'License ID', minWidth: 100},
   { id: 'appId', label: 'Application ID', minWidth: 100 },
   { id: 'custName', label: 'Customer Name', minWidth: 170 },
   { id: 'shortCode', label: 'Short Code', minWidth: 100 },
@@ -27,10 +28,10 @@ const columns = [
   { id: 'licenseStatus', label: 'License Status', minWidth: 120 },
   { id: 'actions', label: 'Actions', minWidth: 120 },
 ];
-
-const createData = (appId, custName, shortCode, expiryDate, licenseStatus, actions) => {
-  return { appId, custName, shortCode, expiryDate, licenseStatus, actions };
+const createData = (id, appId, custName, shortCode, expiryDate, licenseStatus, actions) => {
+  return { id, appId, custName, shortCode, expiryDate, licenseStatus, actions };
 };
+
 export default function DashboardAppPage() {
   const theme = useTheme();
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
@@ -84,7 +85,6 @@ const [action, setAction] = useState(null);
   
     const filtered = rows.filter(
       (row) =>
-        row.appId.toLowerCase().includes(query) ||
         row.custName.toLowerCase().includes(query) ||
         row.shortCode.toLowerCase().includes(query) ||
         row.expiryDate.toLowerCase().includes(query) ||
@@ -93,6 +93,7 @@ const [action, setAction] = useState(null);
     setFilteredRows(filtered);
     setPage(0);
   };
+  
  
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -117,16 +118,18 @@ const [action, setAction] = useState(null);
         const response = await axios.get('http://127.0.0.1:8000/api/alllicenses');
         const appData = response.data;
 
-        // Transform appData into rows array
         const newRows = appData.map((data) =>
-          createData(
-            data.app_id,
-            data.cust_name,
-            data.short_code,
-            data.expiry_date,
-            data.license_status
-          )
-        );
+        createData(
+          data.id,
+          data.app_id,
+          data.cust_name,
+          data.short_code,
+          data.expiry_date,
+          data.license_status,
+          data.actions
+        )
+      );
+      
 
         setRows(newRows);
       } catch (error) {
@@ -378,6 +381,7 @@ const [action, setAction] = useState(null);
     .map((row) => {
       return (
         <TableRow hover role="checkbox" tabIndex={-1} key={row.appId} onClick={() => handleRowClick(row)}>
+          <TableCell>{row.id}</TableCell>
           <TableCell>{row.appId}</TableCell>
           <TableCell>{row.custName}</TableCell>
           <TableCell>{row.shortCode}</TableCell>
@@ -408,7 +412,7 @@ const [action, setAction] = useState(null);
           </Grid>
         </Grid>
       </Container>
-      {isPopupOpen && <UpdateFormPopup selectedRow={selectedRowData} closePopup={handleClose} buttonText="Renew License" handleChangeStatusEndpoint="api1"     dialogueTitle="Update License Details"
+      {isPopupOpen && <UpdateFormPopup selectedRow={selectedRowData} closePopup={handleClose} buttonText="Renew License" handleChangeStatusEndpoint="api2"     dialogueTitle="Update License Details"
  />}
 <div>
       {/* Other content */}

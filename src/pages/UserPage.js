@@ -38,21 +38,22 @@ import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 import { UserListHead } from '../sections/@dashboard/user';
-import UpdateFormPopup from './UpdateFormPopup';
+import UpdateApplicationFormPopup from './UpdateApplicationFormPopup';
 
 
 // ----------------------------------------------------------------------
 
 const columns = [
-  { id: 'appId', label: 'Customer Name', minWidth: 100 },
-  { id: 'custName', label: 'Organization', minWidth: 170 },
+  { id: 'appId', label: 'Application ID', minWidth: 100 }, // Added column for Application ID
+  { id: 'custName', label: 'Customer Name', minWidth: 170 },
+  { id: 'organizationName', label:'Organization', minWidth: 100 },
   { id: 'shortCode', label: 'Short Code', minWidth: 100 },
-  { id: 'expiryDate', label: 'Status', minWidth: 120 },
-  { id: 'licenseStatus', label: 'Opened', minWidth: 120 },
+  { id: 'status', label: 'Status', minWidth: 120 },
+  { id: 'opened', label: 'Opened', minWidth: 120 },
 ];
 
-const createData = (appId, custName, shortCode, expiryDate, licenseStatus) => {
-  return { appId, custName, shortCode, expiryDate, licenseStatus };
+const createData = (appId, custName, organizationName, shortCode,  status, opened) => {
+  return { id: appId, appId, custName, organizationName, shortCode, status, opened };
 };
 
 const HandleButtonClick = () => {
@@ -84,18 +85,19 @@ export default function UserPage() {
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-
+  
     const filtered = rows.filter(
       (row) =>
-        row.appId.toLowerCase().includes(query) ||
-        row.custName.toLowerCase().includes(query) ||
-        row.shortCode.toLowerCase().includes(query) ||
-        row.expiryDate.toLowerCase().includes(query) ||
-        row.licenseStatus.toLowerCase().includes(query)
+        (row.custName && row.custName.toLowerCase().includes(query)) ||
+        (row.organizationName && row.organizationName.toLowerCase().includes(query)) ||
+        (row.shortCode && row.shortCode.toLowerCase().includes(query)) ||
+        (row.status && row.status.toLowerCase().includes(query)) ||
+        (row.opened && row.opened.toLowerCase().includes(query))
     );
     setFilteredRows(filtered);
     setPage(0);
   };
+  
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -105,6 +107,7 @@ export default function UserPage() {
 
         const newRows = appData.map((data) =>
           createData(
+            data.id,
             data.customer_name,
             data.organization_name,
             data.shortcode_applied,
@@ -177,27 +180,27 @@ export default function UserPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {(searchQuery ? filteredRows : rows)
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.appId}
-                      onClick={() => handleRowClick(row)}
-                    >
-
-                      <TableCell>{row.appId}</TableCell>
-                      <TableCell>{row.custName}</TableCell>
-                      <TableCell>{row.shortCode}</TableCell>
-                      <TableCell>{row.expiryDate}</TableCell>
-                      <TableCell>{row.licenseStatus}</TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
+  {(searchQuery ? filteredRows : rows)
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    .map((row) => {
+      return (
+        <TableRow
+          hover
+          role="checkbox"
+          tabIndex={-1}
+          key={row.id}
+          onClick={() => handleRowClick(row)}
+        >
+          <TableCell>{row.appId}</TableCell> 
+          <TableCell>{row.custName}</TableCell>
+          <TableCell>{row.organizationName}</TableCell>
+          <TableCell>{row.shortCode}</TableCell>
+          <TableCell>{row.status}</TableCell>
+          <TableCell>{row.opened}</TableCell>
+        </TableRow>
+      );
+    })}
+</TableBody>
           </Table>
         </TableContainer>
         <TablePagination
@@ -216,11 +219,12 @@ export default function UserPage() {
         <DialogContent>
           {selectedRow && (
             <>
-              <div>Customer Name: {selectedRow.appId}</div>
-              <div>Organization: {selectedRow.custName}</div>
+              <div>Application ID: {selectedRow.appId}</div>
+              <div>Customer Name: {selectedRow.custName}</div>
+              <div>Organization: {selectedRow.organizationName}</div>
               <div>Short Code: {selectedRow.shortCode}</div>
-              <div>Status: {selectedRow.expiryDate}</div>
-              <div>Opened: {selectedRow.licenseStatus}</div>
+              <div>Status: {selectedRow.status}</div>
+              <div>Opened: {selectedRow.opened}</div>
             </>
           )}
           <Button onClick={handleClose}>Close</Button>
@@ -228,7 +232,12 @@ export default function UserPage() {
       </Dialog>
 
       {showUpdateForm && (
-        <UpdateFormPopup selectedRow={selectedRowData} closePopup={handleClose} buttonText="Approve"  handleChangeStatusEndpoint="api1"     dialogueTitle="Update Application Details"
+        <UpdateApplicationFormPopup
+          selectedRow={selectedRowData}
+          closePopup={handleClose}
+          buttonText="Approve"
+          handleChangeStatusEndpoint="api1"
+          dialogueTitle="Update ApplicationDetails"
         />
       )}
     </Container>
