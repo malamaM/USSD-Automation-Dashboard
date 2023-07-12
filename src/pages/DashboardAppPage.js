@@ -18,6 +18,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../sections/@dashboard/app';
 import UpdateFormPopup from './UpdateFormPopup';
+import stripe from './Stripe';
+
 
 const columns = [
   { id: 'id', label: 'License ID', minWidth: 100},
@@ -93,6 +95,10 @@ const [action, setAction] = useState(null);
     setFilteredRows(filtered);
     setPage(0);
   };
+  
+    const handleClickkk = () => {
+      window.open('https://example.com', '_blank');
+    };
   
  
   useEffect(() => {
@@ -258,6 +264,9 @@ const [action, setAction] = useState(null);
     };
   }, []);
 
+
+
+
   return (
     <>
       <Helmet>
@@ -416,11 +425,19 @@ const [action, setAction] = useState(null);
  />}
 <div>
       {/* Other content */}
-      <iframe src="http://127.0.0.1:8000/lstripe/" width="100%" height="500px" frameBorder="0" title="Payment Form" />
+      <button onClick={handleClickkk}>
+      Redirect
+    </button>
+
     </div>
+
+
+    <button onClick={handleClickkk}>
+      Redirect
+    </button>
+
     </>
     
-
 
 
 
