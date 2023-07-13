@@ -300,8 +300,9 @@ const [action, setAction] = useState(null);
             <AppWidgetSummary title="Total Available Shortcodes" total={availableshortcodes} color="error" icon={'ant-design:hourglass-filled'} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={6} lg={8} style={{color:'white'}}>
             <AppWebsiteVisits
+            style={{color:'white'}}
               title="Website Activity"
               subheader="(+43%) than last year"
               chartLabels={[
@@ -360,8 +361,10 @@ const [action, setAction] = useState(null);
             <Typography variant="h6" sx={{ mb: 5, color: 'black' }}>
               USSD Shortcode Licenses
             </Typography>
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor:'#f5f5f5'}}>
               <TextField
+              inputProps={{style: {color: 'black'}}}
+              InputLabelProps={{style: {color: 'black'}}} 
                 label="Search"
                 value={searchQuery}
                 onChange={handleSearch}
@@ -369,7 +372,7 @@ const [action, setAction] = useState(null);
                 variant="outlined"
                 fullWidth
               />
-              <TableContainer sx={{ maxHeight: 440 }}>
+              <TableContainer sx={{ maxHeight: 440, backgroundColor: '#f0f0f0' }}>
                 <Table stickyHeader aria-label="sticky table">
                   <TableHead>
                     <TableRow>
@@ -377,7 +380,7 @@ const [action, setAction] = useState(null);
                         <TableCell
                           key={column.id}
                           align="left"
-                          style={{ minWidth: column.minWidth }}
+                          style={{ minWidth: column.minWidth, color:"#000" }}
                         >
                           {column.label}
                         </TableCell>
