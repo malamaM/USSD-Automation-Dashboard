@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography, Tab } from '@mui/material';
+import { Grid, Container, Typography, Tab, CircularProgress } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,11 +18,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../sections/@dashboard/app';
 import UpdateFormPopup from './UpdateFormPopup';
-import stripe from './Stripe';
-
 
 const columns = [
-  { id: 'id', label: 'License ID', minWidth: 100},
+  { id: 'id', label: 'License ID', minWidth: 100 },
   { id: 'appId', label: 'Application ID', minWidth: 100 },
   { id: 'custName', label: 'Customer Name', minWidth: 170 },
   { id: 'shortCode', label: 'Short Code', minWidth: 100 },
@@ -36,6 +34,7 @@ const createData = (id, appId, custName, shortCode, expiryDate, licenseStatus, a
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+  const [loading, setLoading] = useState(true);
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
   const [AwaitingActionCount, setAwaitingActionCount] = useState(0);
   const [expiring, setexpiring] = useState(0);
@@ -49,8 +48,7 @@ export default function DashboardAppPage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-
-const [action, setAction] = useState(null);
+  const [action, setAction] = useState(null);
 
   const Navigate = useNavigate();
   const [selectedRowData, setSelectedRowData] = useState(null);
@@ -65,17 +63,15 @@ const [action, setAction] = useState(null);
     setIsPopupOpen(true);
   };
 
-
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  
+
   const handleClose = () => {
     setIsPopupOpen(false);
   };
@@ -84,7 +80,7 @@ const [action, setAction] = useState(null);
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-  
+
     const filtered = rows.filter(
       (row) =>
         row.custName.toLowerCase().includes(query) ||
@@ -95,12 +91,11 @@ const [action, setAction] = useState(null);
     setFilteredRows(filtered);
     setPage(0);
   };
-  
-    const handleClickkk = () => {
-      window.open('https://example.com', '_blank');
-    };
-  
- 
+
+  const handleClickkk = () => {
+    window.open('https://example.com', '_blank');
+  };
+
   useEffect(() => {
     const checkAuthentication = async () => {
       const token = localStorage.getItem('token');
@@ -114,7 +109,7 @@ const [action, setAction] = useState(null);
         Navigate('/login');
       }
     };
-    
+
     checkAuthentication();
   }, []);
 
@@ -125,23 +120,24 @@ const [action, setAction] = useState(null);
         const appData = response.data;
 
         const newRows = appData.map((data) =>
-        createData(
-          data.id,
-          data.app_id,
-          data.cust_name,
-          data.short_code,
-          data.expiry_date,
-          data.license_status,
-          data.actions
-        )
-      );
-      
+          createData(
+            data.id,
+            data.app_id,
+            data.cust_name,
+            data.short_code,
+            data.expiry_date,
+            data.license_status,
+            data.actions
+          )
+        );
 
         setRows(newRows);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
         console.error('Error fetching applications:', error);
       }
     };
+
     fetchApplications();
     const intervalId = setInterval(fetchApplications, 10000); // Fetch every 10 seconds
 
@@ -236,10 +232,10 @@ const [action, setAction] = useState(null);
         console.error('Error fetching active count:', error);
       }
     };
-  
+
     fetchActiveCount();
     const intervalId = setInterval(fetchActiveCount, 10000); // Fetch every 10 seconds
-  
+
     return () => {
       clearInterval(intervalId); // Cleanup the interval on component unmount
     };
@@ -255,17 +251,14 @@ const [action, setAction] = useState(null);
         console.error('Error fetching expired count:', error);
       }
     };
-  
+
     fetchexpiredCount();
     const intervalId = setInterval(fetchexpiredCount, 10000); // Fetch every 10 seconds
-  
+
     return () => {
       clearInterval(intervalId); // Cleanup the interval on component unmount
     };
   }, []);
-
-
-
 
   return (
     <>
@@ -300,10 +293,10 @@ const [action, setAction] = useState(null);
             <AppWidgetSummary title="Total Available Shortcodes" total={availableshortcodes} color="error" icon={'ant-design:hourglass-filled'} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8} style={{color:'white'}}>
+          <Grid item xs={12} md={6} lg={8} style={{ color: 'white' }}>
             <AppWebsiteVisits
-            style={{color:'white'}}
-              title="Website Activity"
+              style={{ color: 'white' }}
+              title="USSD Short Code Portal Activity"
               subheader="(+43%) than last year"
               chartLabels={[
                 '01/01/2003',
@@ -342,7 +335,9 @@ const [action, setAction] = useState(null);
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
+              style={{ color: 'white' }}
               title="Current USSD codes"
+              color="#2d3d7d"
               chartData={[
                 { label: 'Applied', value: pendingApplicationsCount + AwaitingActionCount },
                 { label: 'Active', value: activeCount },
@@ -361,10 +356,10 @@ const [action, setAction] = useState(null);
             <Typography variant="h6" sx={{ mb: 5, color: 'black' }}>
               USSD Shortcode Licenses
             </Typography>
-            <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor:'#f5f5f5'}}>
+            <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor: '#f5f5f5' }}>
               <TextField
-              inputProps={{style: {color: 'black'}}}
-              InputLabelProps={{style: {color: 'black'}}} 
+                inputProps={{ style: { color: 'black' } }}
+                InputLabelProps={{ style: { color: 'black' } }}
                 label="Search"
                 value={searchQuery}
                 onChange={handleSearch}
@@ -372,77 +367,83 @@ const [action, setAction] = useState(null);
                 variant="outlined"
                 fullWidth
               />
-              <TableContainer sx={{ maxHeight: 440, backgroundColor: '#f0f0f0' }}>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    <TableRow>
-                      {columns.map((column) => (
-                        <TableCell
-                          key={column.id}
-                          align="left"
-                          style={{ minWidth: column.minWidth, color:"#000" }}
-                        >
-                          {column.label}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-  {(searchQuery ? filteredRows : rows)
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    .map((row) => {
-      return (
-        <TableRow hover role="checkbox" tabIndex={-1} key={row.appId} onClick={() => handleRowClick(row)}>
-          <TableCell>{row.id}</TableCell>
-          <TableCell>{row.appId}</TableCell>
-          <TableCell>{row.custName}</TableCell>
-          <TableCell>{row.shortCode}</TableCell>
-          <TableCell>{row.expiryDate}</TableCell>
-          <TableCell>{row.licenseStatus}</TableCell>
-          <TableCell>
-            <DeleteIcon />
-            <EditIcon />
-            <CheckIcon />
-          </TableCell>
-        </TableRow>
-      );
-    })}
-</TableBody>
-
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={(searchQuery ? filteredRows : rows).length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
+                  <CircularProgress />
+                </div>
+              ) : (
+                <>
+                  <TableContainer sx={{ maxHeight: 440, backgroundColor: '#f0f0f0' }}>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align="left"
+                              style={{ minWidth: column.minWidth, color: '#fff' }}
+                            >
+                              {column.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(searchQuery ? filteredRows : rows)
+                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((row) => {
+                            return (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={row.appId}
+                                onClick={() => handleRowClick(row)}
+                              >
+                                <TableCell>{row.id}</TableCell>
+                                <TableCell>{row.appId}</TableCell>
+                                <TableCell>{row.custName}</TableCell>
+                                <TableCell>{row.shortCode}</TableCell>
+                                <TableCell>{row.expiryDate}</TableCell>
+                                <TableCell>{row.licenseStatus}</TableCell>
+                                <TableCell>
+                                  <DeleteIcon />
+                                  <EditIcon />
+                                  <CheckIcon />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={(searchQuery ? filteredRows : rows).length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </>
+              )}
             </Paper>
           </Grid>
         </Grid>
       </Container>
-      {isPopupOpen && <UpdateFormPopup selectedRow={selectedRowData} closePopup={handleClose} buttonText="Renew License" handleChangeStatusEndpoint="api2"     dialogueTitle="Update License Details"
- />}
-<div>
-      {/* Other content */}
-      <button onClick={handleClickkk}>
-      Redirect
-    </button>
-
-    </div>
-
-
-    <button onClick={handleClickkk}>
-      Redirect
-    </button>
-
+      {isPopupOpen && (
+        <UpdateFormPopup
+          selectedRow={selectedRowData}
+          closePopup={handleClose}
+          buttonText="Renew License"
+          handleChangeStatusEndpoint="api2"
+          dialogueTitle="Update License Details"
+          headerBackgroundColor="#f5f5f5"
+          headerTextColor="#f5f5f5"
+          style={{ color: 'white' }}
+        />
+      )}
     </>
-    
-
-
-
   );
 }

@@ -1,19 +1,35 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  CircularProgress,
+} from '@mui/material';
 
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
-
-const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStatusEndpoint, dialogueTitle }) => {
+const UpdateApplicationFormPopup = ({
+  selectedRow,
+  closePopup,
+  buttonText,
+  handleChangeStatusEndpoint,
+  dialogueTitle,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
   const [formData, setFormData] = useState({
-    id : selectedRow.id,
+    id: selectedRow.id,
     appId: selectedRow.appId,
     custName: selectedRow.custName,
     shortCode: selectedRow.shortCode,
     organizationName: selectedRow.organizationName,
     status: selectedRow.status,
   });
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [renewLoading, setRenewLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -22,16 +38,16 @@ const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handl
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    setUpdateLoading(true);
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/applications/update', formData);
       console.log('Form submitted successfully', response.data);
-      // Optionally, you can show a success message or perform any other actions here
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Optionally, you can show an error message or perform any other error handling here
     }
 
+    setUpdateLoading(false);
     handleClose();
   };
 
@@ -44,82 +60,129 @@ const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handl
   };
 
   const handleDelete = async () => {
+    setDeleteLoading(true);
+
     try {
-      // Perform the delete operation here
- 
-        const response = await axios.post('http://127.0.0.1:8000/api/delete-application', formData);
-        console.log('API 1 response:', response.data);    } catch (error) {
+      const response = await axios.post('http://127.0.0.1:8000/api/delete-application', formData);
+      console.log('API response:', response.data);
+      handleClose();
+    } catch (error) {
       console.error('Error deleting:', error);
     }
-    
+
+    setDeleteLoading(false);
   };
 
   const handleChangeStatus = async () => {
+    setRenewLoading(true);
+
     try {
-      // Perform the change status operation based on the chosen endpoint
       if (handleChangeStatusEndpoint === 'api1') {
         const response = await axios.post('http://127.0.0.1:8000/api/change-status', formData);
         console.log('API 1 response:', response.data);
+        handleClose();
       } else if (handleChangeStatusEndpoint === 'api2') {
         const response = await axios.post('http://127.0.0.1:8000/api/endpoint2', formData);
         console.log('API 2 response:', response.data);
+        handleClose();
       }
     } catch (error) {
       console.error('Error changing status:', error);
     }
+
+    setRenewLoading(false);
   };
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
       <DialogTitle>{dialogueTitle}</DialogTitle>
-      <DialogContent>
-        {/* Render the form fields here */}
-        <form onSubmit={handleFormSubmit}>
+      <DialogContent style={{ backgroundColor: '#f5f5f5' }}>
+        <form
+          style={{ backgroundColor: '#f5f5f5', color: 'black', display: 'flex', flexDirection: 'column' }}
+          onSubmit={handleFormSubmit}
+        >
           <TextField
+            style={{ marginTop: '20px' }}
             label="Application ID"
             name="appId"
             value={formData.appId}
             onChange={handleInputChange}
             fullWidth
+            inputProps={{ style: { color: 'black' } }}
+            InputLabelProps={{ style: { color: 'black' } }}
+            margin="normal"
           />
           <TextField
+            style={{ marginTop: '20px' }}
             label="Customer Name"
             name="custName"
             value={formData.custName}
             onChange={handleInputChange}
             fullWidth
+            inputProps={{ style: { color: 'black' } }}
+            InputLabelProps={{ style: { color: 'black' } }}
+            margin="normal"
           />
           <TextField
+            style={{ marginTop: '20px' }}
             label="Organization"
             name="organizationName"
             value={formData.organizationName}
             onChange={handleInputChange}
             fullWidth
-          /><TextField
+            inputProps={{ style: { color: 'black' } }}
+            InputLabelProps={{ style: { color: 'black' } }}
+            margin="normal"
+          />
+          <TextField
+            style={{ marginTop: '20px' }}
             label="Short Code"
             name="shortCode"
             value={formData.shortCode}
             onChange={handleInputChange}
             fullWidth
+            inputProps={{ style: { color: 'black' } }}
+            InputLabelProps={{ style: { color: 'black' } }}
+            margin="normal"
           />
           <TextField
+            style={{ marginTop: '20px' }}
             label="Status"
             name="status"
             value={formData.status}
             onChange={handleInputChange}
             fullWidth
+            inputProps={{ style: { color: 'black' } }}
+            InputLabelProps={{ style: { color: 'black' } }}
+            margin="normal"
           />
-          {/* Add more form fields for other columns */}
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleDelete} variant="contained" color="error">
-              Delete
+          <DialogActions style={{ marginTop: '40px', backgroundColor: '#f5f5f5' }}>
+            <Button onClick={handleClose} style={{ backgroundColor: 'black', color: 'white' }}>
+              Cancel
             </Button>
-            <Button onClick={handleChangeStatus} variant="contained" color="warning">
-              {buttonText}
+            <Button
+              onClick={handleDelete}
+              variant="contained"
+              style={{ backgroundColor: 'red', color: 'white' }}
+              disabled={deleteLoading}
+            >
+              {deleteLoading ? <CircularProgress color="inherit" size={20} /> : 'Delete'}
             </Button>
-            <Button type="submit" variant="contained" color="primary">
-              Update
+            <Button
+              onClick={handleChangeStatus}
+              variant="contained"
+              style={{ backgroundColor: 'blue', color: 'white' }}
+              disabled={renewLoading}
+            >
+              {renewLoading ? <CircularProgress color="inherit" size={20} /> : buttonText}
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              style={{ backgroundColor: 'green', color: 'white' }}
+              disabled={updateLoading}
+            >
+              {updateLoading ? <CircularProgress color="inherit" size={20} /> : 'Update'}
             </Button>
           </DialogActions>
         </form>
