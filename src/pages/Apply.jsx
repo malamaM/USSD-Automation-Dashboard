@@ -43,7 +43,7 @@ const Apply = () => {
     console.log(search);
     axios
       .post(
-        'http://127.0.0.1:8000/search',
+        'https://vulkantechnologylabs.com/search',
         { query: search },
         {
           headers: {

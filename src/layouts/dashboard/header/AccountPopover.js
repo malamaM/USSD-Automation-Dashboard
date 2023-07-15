@@ -38,7 +38,7 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const handleClose = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/logout');
+      const response = await axios.post('https://vulkantechnologylabs.com/api/logout');
       if (response.status === 200) {
         // Logout successful
         // Perform any necessary actions after logout

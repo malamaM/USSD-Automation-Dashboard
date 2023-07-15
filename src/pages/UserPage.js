@@ -119,7 +119,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/applications');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/applications');
         const appData = response.data;
 
         const newRows = appData.map((data) =>
