@@ -108,7 +108,7 @@ const Apply = () => {
             style={{ marginTop: '4px', position: 'absolute' }}
           >
             <h1 className="text-2xl font-medium md:text-7xl sm:text-4xl text-white mb-5">
-              USSD Code Application Form
+              USSD ShortCode Application Form
             </h1>
             <p className="text-center text-sm sm:text-xl md:text-2xl max-w-4xl text-white mb-5">
               Unlock the Power of USSD with Personalized Codes Apply, Activate, and Connect with Ease!

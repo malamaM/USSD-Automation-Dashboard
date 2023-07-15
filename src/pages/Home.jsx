@@ -116,7 +116,7 @@ const Home = () => {
       <div className="w-5/6 flex-col flex items-center justify-center">
         <div className="flex flex-col items-center justify-around">
           <h1 className="text-center text-2xl font-medium md:text-7xl sm:text-4xl text-white mb-5">
-            USSD Code Application Platform
+            USSD ShortCode Application Platform
           </h1>
           <p className="text-center text-sm sm:text-xl md:text-2xl max-w-4xl text-white mb-5">
             Unlock the Power of USSD with Personalized Codes Apply, Activate, and Connect with Ease!
