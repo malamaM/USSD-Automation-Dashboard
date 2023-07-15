@@ -358,7 +358,7 @@ export default function DashboardAppPage() {
         <UpdateApplicationFormPopup
           selectedRow={selectedRowData}
           closePopup={handleClose}
-          buttonText="Approve"
+         buttonText="Approve" 
           handleChangeStatusEndpoint="api1"
           dialogueTitle="Pay for Application"
           dialogueTitle2="Pay for License"

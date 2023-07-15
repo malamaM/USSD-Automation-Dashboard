@@ -14,6 +14,7 @@ import {
 const UpdateFormPopup = ({
   selectedRow,
   closePopup,
+  buttonText2,
   buttonText,
   handleChangeStatusEndpoint,
   dialogueTitle
@@ -30,6 +31,7 @@ const UpdateFormPopup = ({
   const [deleteLoading, setDeleteLoading] = useState(false); // Delete loading state
   const [renewLoading, setRenewLoading] = useState(false); // Renew loading state
   const [updateLoading, setUpdateLoading] = useState(false); // Update loading state
+  const [ApproveLoading, setApproveLoading]=useState(false);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -96,6 +98,31 @@ const UpdateFormPopup = ({
 
     setRenewLoading(false); // Set renew loading state to false
   };
+
+  const handleRenewApprove = async () => {
+    setApproveLoading(true); // Set renew loading state to true
+
+    try {
+      // Perform the change status operation based on the chosen endpoint
+      if (handleChangeStatusEndpoint === 'api1') {
+        const response = await axios.post('http://127.0.0.1:8000/api/licenserenewalapproved', formData);
+        console.log('API 1 response:', response.data);
+        handleClose(); // Close the dialog box when renew action is completed
+      } else if (handleChangeStatusEndpoint === 'api2') {
+        const response = await axios.post('http://127.0.0.1:8000/api/shortcode/setexpiry', formData);
+        console.log('API 2 response:', response.data);
+        handleClose(); // Close the dialog box when renew action is completed
+      }
+    } catch (error) {
+      console.error('Error changing status:', error);
+    }
+
+    setApproveLoading(false); // Set renew loading state to false
+  };
+
+
+
+
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
@@ -175,6 +202,20 @@ const UpdateFormPopup = ({
                 'Delete'
               )}
             </Button>
+
+
+            <Button
+              onClick={handleRenewApprove}
+              variant="contained"
+              style={{ backgroundColor: 'blue', color: 'white' }}
+              disabled={renewLoading}
+            >
+              {ApproveLoading ? (
+                <CircularProgress color="inherit" size={20} />
+              ) : (
+                buttonText2
+              )}
+            </Button>
             <Button
               onClick={handleChangeStatus}
               variant="contained"
@@ -209,6 +250,7 @@ const UpdateFormPopup = ({
 UpdateFormPopup.propTypes = {
   selectedRow: PropTypes.object.isRequired,
   closePopup: PropTypes.func.isRequired,
+  buttonText2: PropTypes.string.isRequired,
   buttonText: PropTypes.string.isRequired,
   handleChangeStatusEndpoint: PropTypes.oneOf(['api1', 'api2']).isRequired,
   dialogueTitle: PropTypes.string.isRequired,

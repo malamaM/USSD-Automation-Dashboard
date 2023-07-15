@@ -334,24 +334,25 @@ export default function DashboardAppPage() {
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits
-              style={{ color: 'white' }}
-              title="Current USSD codes"
-              color="#2d3d7d"
-              chartData={[
-                { label: 'Applied', value: pendingApplicationsCount + AwaitingActionCount },
-                { label: 'Active', value: activeCount },
-                { label: 'Expiring Soon', value: expiring },
-                { label: 'Expired', value: expiredCount },
-              ]}
-              chartColors={[
-                theme.palette.success.main,
-                theme.palette.info.main,
-                theme.palette.warning.main,
-                theme.palette.error.main,
-              ]}
-            />
-          </Grid>
+  <AppCurrentVisits
+    title="Current USSD codes"
+    color="#2d3d7d"
+    chartData={[
+      { label: 'Applied', value: pendingApplicationsCount + AwaitingActionCount },
+      { label: 'Active', value: activeCount },
+      { label: 'Expiring Soon', value: expiring },
+      { label: 'Expired', value: expiredCount },
+    ]}
+    chartColors={[
+      theme.palette.success.main,
+      theme.palette.info.main,
+      theme.palette.warning.main,
+      theme.palette.error.main,
+    ]}
+   // labelStyle={{ color: 'white' }} // Updated line
+  />
+</Grid>
+
           <Grid item xs={12} md={6} lg={13}>
             <Typography variant="h6" sx={{ mb: 5, color: 'black' }}>
               USSD Shortcode Licenses
@@ -436,8 +437,9 @@ export default function DashboardAppPage() {
         <UpdateFormPopup
           selectedRow={selectedRowData}
           closePopup={handleClose}
+          buttonText2="Approve Renewal" 
           buttonText="Renew License"
-          handleChangeStatusEndpoint="api2"
+          handleChangeStatusEndpoint="api1"
           dialogueTitle="Update License Details"
           headerBackgroundColor="#f5f5f5"
           headerTextColor="#f5f5f5"
