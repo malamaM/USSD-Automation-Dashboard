@@ -19,7 +19,7 @@ export default function LoginForm() {
 
   const fetchCsrfToken = async () => {
     try {
-      const response = await axios.get('https://vulkantechnologylabs.com/token');
+      const response = await axios.get('http://127.0.0.1:8000/token');
       setCsrfToken(response.data.csrfToken);
       console.log(csrfToken);
     } catch (error) {

@@ -17,7 +17,7 @@ const SearchForm = () => {
     console.log(data);
     axios
       .post(
-        'https://vulkantechnologylabs.com/search',
+        'http://127.0.0.1:8000/search',
         { query: data.search },
         {
           headers: {
