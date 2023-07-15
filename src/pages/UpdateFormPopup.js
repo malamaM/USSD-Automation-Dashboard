@@ -43,7 +43,7 @@ const UpdateFormPopup = ({
     setUpdateLoading(true); // Set update loading state to true
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/licenses/update', formData);
+      const response = await axios.post('https://vulkantechnologylabs.com//api/licenses/update', formData);
       console.log('Form submitted successfully', response.data);
       // Optionally, you can show a success message or perform any other actions here
     } catch (error) {
@@ -68,7 +68,7 @@ const UpdateFormPopup = ({
 
     try {
       // Perform the delete operation here
-      const response = await axios.post('http://127.0.0.1:8000/api/delete-application', formData);
+      const response = await axios.post('https://vulkantechnologylabs.com//api/delete-application', formData);
       console.log('API 1 response:', response.data);
       handleClose(); // Close the dialog box when delete action is completed
     } catch (error) {
@@ -84,11 +84,11 @@ const UpdateFormPopup = ({
     try {
       // Perform the change status operation based on the chosen endpoint
       if (handleChangeStatusEndpoint === 'api1') {
-        const response = await axios.post('http://127.0.0.1:8000/api/change-status', formData);
+        const response = await axios.post('https://vulkantechnologylabs.com//api/change-status', formData);
         console.log('API 1 response:', response.data);
         handleClose(); // Close the dialog box when renew action is completed
       } else if (handleChangeStatusEndpoint === 'api2') {
-        const response = await axios.post('http://127.0.0.1:8000/api/shortcode/setexpiry', formData);
+        const response = await axios.post('https://vulkantechnologylabs.com//api/shortcode/setexpiry', formData);
         console.log('API 2 response:', response.data);
         handleClose(); // Close the dialog box when renew action is completed
       }
@@ -105,11 +105,11 @@ const UpdateFormPopup = ({
     try {
       // Perform the change status operation based on the chosen endpoint
       if (handleChangeStatusEndpoint === 'api1') {
-        const response = await axios.post('http://127.0.0.1:8000/api/licenserenewalapproved', formData);
+        const response = await axios.post('https://vulkantechnologylabs.com//api/licenserenewalapproved', formData);
         console.log('API 1 response:', response.data);
         handleClose(); // Close the dialog box when renew action is completed
       } else if (handleChangeStatusEndpoint === 'api2') {
-        const response = await axios.post('http://127.0.0.1:8000/api/shortcode/setexpiry', formData);
+        const response = await axios.post('https://vulkantechnologylabs.com//api/shortcode/setexpiry', formData);
         console.log('API 2 response:', response.data);
         handleClose(); // Close the dialog box when renew action is completed
       }
