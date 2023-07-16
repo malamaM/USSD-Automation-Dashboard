@@ -111,7 +111,7 @@ const Apply = () => {
               USSD ShortCode Application Form
             </h1>
             <p className="text-center text-sm sm:text-xl md:text-2xl max-w-4xl text-white mb-5">
-              Unlock the Power of USSD with Personalized Codes Apply, Activate, and Connect with Ease!
+              Unlock the Power of USSD with Personalized ShortCodes Apply, Activate, and Connect with Ease!
             </p>
             <LoginForm />
           </motion.div>
