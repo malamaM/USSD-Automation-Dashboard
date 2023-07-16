@@ -41,7 +41,7 @@ const UpdateApplicationFormPopup = ({
     setUpdateLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/applications/update', formData);
+      const response = await axios.post('https://vulkantechnologylabs.com/api/applications/update', formData);
       console.log('Form submitted successfully', response.data);
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -63,7 +63,7 @@ const UpdateApplicationFormPopup = ({
     setDeleteLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/delete-application', formData);
+      const response = await axios.post('https://vulkantechnologylabs.com/api/delete-application', formData);
       console.log('API response:', response.data);
       handleClose();
     } catch (error) {
@@ -78,11 +78,11 @@ const UpdateApplicationFormPopup = ({
 
     try {
       if (handleChangeStatusEndpoint === 'api1') {
-        const response = await axios.post('http://127.0.0.1:8000/api/change-status', formData);
+        const response = await axios.post('https://vulkantechnologylabs.com/api/change-status', formData);
         console.log('API 1 response:', response.data);
         handleClose();
       } else if (handleChangeStatusEndpoint === 'api2') {
-        const response = await axios.post('http://127.0.0.1:8000/api/endpoint2', formData);
+        const response = await axios.post('https://vulkantechnologylabs.com/api/endpoint2', formData);
         console.log('API 2 response:', response.data);
         handleClose();
       }
